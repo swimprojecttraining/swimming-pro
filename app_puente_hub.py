@@ -5,6 +5,20 @@ import hashlib
 import base64
 from supabase import create_client
 
+# ============================================================
+# ⚙️ CONEXIÓN GLOBAL CACHEADA (A nivel raíz del archivo)
+# ============================================================
+@st.cache_resource
+def obtener_cliente_supabase():
+    """
+    Crea y mantiene viva la instancia de conexión a Supabase en memoria.
+    Se ejecuta una sola vez para la app y la reutilizan todos los usuarios/reruns.
+    """
+    return create_client(
+        st.secrets["SUPABASE_URL"], 
+        st.secrets["SUPABASE_KEY"]
+    )
+
 def generar_token_handshake(nombre_club, secret_key_exclusivo):
     """
     Genera un token firmado criptográficamente mediante HMAC-SHA256
