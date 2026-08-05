@@ -1,2 +1,3 @@
 streamlit
 supabase
+starlette>=0.27.0,<0.38.0
