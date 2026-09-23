@@ -1,10 +1,48 @@
-import streamlit as st
-import time
-import hmac
-import hashlib
 import base64
+import hashlib
+import hmac
+import time
+
+import streamlit as st
 from supabase import create_client
 
+
+# ============================================================
+# 🎨 FUNCIÓN PARA CONFIGURAR LA IMAGEN DE FONDO ESTÁNDAR
+# ============================================================
+def cargar_fondo_interfaz(nombre_archivo="Fondo_de_pantalla_Swimprojecttraining.png"):
+  """Lee la imagen del fondo desde la raíz del proyecto y la inyecta mediante CSS en la app de Streamlit."""
+  try:
+    with open(nombre_archivo, "rb") as f:
+      bytes_imagen = f.read()
+    b64_img = base64.b64encode(bytes_imagen).decode()
+
+    estilos_css = f"""
+        <style>
+        /* Aplicar imagen de fondo a toda la aplicación */
+        .stApp {{
+            background-image: url("data:image/png;base64,{b64_img}");
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center center;
+            background-attachment: fixed;
+        }}
+
+        /* Mejorar la visibilidad de los contenedores/formularios sobre el fondo */
+        [data-testid="stForm"] {{
+            background-color: rgba(255, 255, 255, 0.85);
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.08);
+        }}
+        </style>
+        """
+    st.markdown(estilos_css, unsafe_allow_html=True)
+  except FileNotFoundError:
+    st.warning(
+        f"⚠️ No se encontró la imagen '{nombre_archivo}' en la raíz del"
+        " repositorio."
+    )
 # ============================================================
 # ⚙️ CONEXIÓN GLOBAL CACHEADA (A nivel raíz del archivo)
 # ============================================================
